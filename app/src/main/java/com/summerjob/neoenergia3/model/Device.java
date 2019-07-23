@@ -7,21 +7,11 @@ import java.util.List;
 
 public class Device implements Serializable {
 
-    private String uid;
     private String token;
     private String location;
-    private List<WiFi> wifiList;
     private String timestamp;
 
     public Device() {
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getToken() {
@@ -38,14 +28,6 @@ public class Device implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public List<WiFi> getWifiList() {
-        return wifiList;
-    }
-
-    public void setWifiList(List<WiFi> wifiList) {
-        this.wifiList = wifiList;
     }
 
     public String getTimestamp() {

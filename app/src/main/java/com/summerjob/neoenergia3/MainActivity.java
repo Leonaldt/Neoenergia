@@ -7,20 +7,22 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.summerjob.neoenergia3.Util.Util;
 import com.summerjob.neoenergia3.model.Device;
@@ -28,18 +30,16 @@ import com.summerjob.neoenergia3.model.WiFi;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ROOT = "device";
+    private String ROOT = "";
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private String refreshedToken;
     private String locationCurrent;
@@ -123,40 +123,52 @@ public class MainActivity extends AppCompatActivity {
 
                     if (device == null) {
 
+
+
                         Device device = new Device();
-                        device.setUid(databaseReference.child(ROOT).push().getKey());
                         device.setLocation(locationCurrent);
                         device.setToken(refreshedToken);
                         device.setTimestamp(format);
 
-                        databaseReference.child(ROOT).child(device.getUid()).setValue(device);
+                        db.collection("entries").add(device).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getApplicationContext(), "Succes", Toast.LENGTH_LONG).show();
 
-                        for (WiFi w : wiFiList){
+                                ROOT = documentReference.getId();
 
-                            Log.d("REDES", "Rede: "+w.getName());
+                                Log.d("FIRESTORE", "root: "+ROOT);
 
-                            databaseReference.child(ROOT).child(device.getUid())
-                                    .child("wifiList")
-                                    .child(databaseReference.child("wifiList").push().getKey())
-                                    .setValue(w);
+                                for (WiFi w : wiFiList){
 
-                        }
+                                    Log.d("FIRESTORE", "Wifi:  "+w);
 
-                    } else {
+                                    db.collection("entries").document(ROOT).collection("wifiList").add(w).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Toast.makeText(getApplicationContext(), "WiFi Succes", Toast.LENGTH_LONG).show();
+                                            Log.d("FIRESTORE", "documentReference: "+documentReference);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getApplicationContext(), "WiFi Failer", Toast.LENGTH_LONG).show();
+                                            Log.d("FIRESTORE", "Wifi Exception: "+e.getMessage());
+                                        }
+                                    });
 
-                        device.setLocation(locationCurrent);
-                        device.setTimestamp(format);
+                                }
 
-                        databaseReference.child(ROOT).child(device.getUid()).setValue(device);
+                            }
 
-                        for (WiFi w : wiFiList){
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "Failer", Toast.LENGTH_LONG).show();
+                            }
+                        });
 
-                            databaseReference.child(ROOT).child(device.getUid())
-                                    .child("wifiList")
-                                    .child(databaseReference.child("wifiList").push().getKey())
-                                    .setValue(w);
 
-                        }
 
                     }
 
