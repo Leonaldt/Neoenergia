@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "821485263657",
+    "firebase_url": "https://neoenergia3-a687d.firebaseio.com",
+    "project_id": "neoenergia3-a687d",
+    "storage_bucket": "neoenergia3-a687d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821485263657:android:0c363fa1cf0ba4eb",
+        "android_client_info": {
+          "package_name": "com.summerjob.neoenergia3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821485263657-3ur8v5gjp8bvkoclckohd0etrvdh2nlg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.summerjob.neoenergia3",
+            "certificate_hash": "09075840e470806b7b645d1c34a1da67da61b4bb"
+          }
+        },
+        {
+          "client_id": "821485263657-13mif3dt2g3g1gkpjc7nfpv363g6m4n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ3BmrlVF2ClTuZaE0K095oq3QRS72bw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821485263657-13mif3dt2g3g1gkpjc7nfpv363g6m4n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
