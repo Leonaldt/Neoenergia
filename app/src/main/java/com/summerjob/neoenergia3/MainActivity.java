@@ -36,16 +36,22 @@ public class MainActivity extends AppCompatActivity {
                     WifiManager.WIFI_STATE_UNKNOWN);
 
             switch (wifiStateExtra) {
+//                case Wifi
+
                 case WifiManager.WIFI_STATE_ENABLED:
                     Toast.makeText(context, "WiFi is ON", Toast.LENGTH_LONG).show();
+
                     // TODO we should ask if there is a shared preference if not, CREATE and ADD LOCATION
+
                     String savedNetwork = getSavedNetwork();
+
                     if(savedNetwork == null && getActualNetworkName() != null){
                         saveNetwork(getActualNetworkName());
                         Toast.makeText(context, "SAVING Network: "+getActualNetworkName(), Toast.LENGTH_SHORT).show();
                     } else if(savedNetwork != null){
                         Toast.makeText(context, "SAVED Network: "+savedNetwork, Toast.LENGTH_SHORT).show();
                     }
+
                     // TODO ADD network name, ADD deviceId, ADD timestamp
                     Toast.makeText(context, "Network: "+getActualNetworkName(), Toast.LENGTH_SHORT).show();
 
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        // IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
         IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(wifiStateReceiver, intentFilter);
     }
