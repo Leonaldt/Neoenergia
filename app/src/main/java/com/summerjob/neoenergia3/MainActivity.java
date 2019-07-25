@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiInfo;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private String refreshedToken;
     private String locationCurrent;
 
+    SharedPreferences sharedPreferences;
+
     private BroadcastReceiver wifiStateReceiver = new BroadcastReceiver() {
 
         @Override
@@ -36,8 +39,15 @@ public class MainActivity extends AppCompatActivity {
                 case WifiManager.WIFI_STATE_ENABLED:
                     Toast.makeText(context, "WiFi is ON", Toast.LENGTH_LONG).show();
                     // TODO we should ask if there is a shared preference if not, CREATE and ADD LOCATION
+                    String savedNetwork = getSavedNetwork();
+                    if(savedNetwork == null && getActualNetworkName() != null){
+                        saveNetwork(getActualNetworkName());
+                        Toast.makeText(context, "SAVING Network: "+getActualNetworkName(), Toast.LENGTH_SHORT).show();
+                    } else if(savedNetwork != null){
+                        Toast.makeText(context, "SAVED Network: "+savedNetwork, Toast.LENGTH_SHORT).show();
+                    }
                     // TODO ADD network name, ADD deviceId, ADD timestamp
-                    Toast.makeText(context, getActualNetworkName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Network: "+getActualNetworkName(), Toast.LENGTH_SHORT).show();
 
                     break;
 
@@ -53,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        sharedPreferences = getSharedPreferences(getString(R.string.saved_network), Context.MODE_PRIVATE);
         this.refreshedToken = FirebaseInstanceId.getInstance().getToken();
         this.locationCurrent = Util.getLocation(this);
     }
@@ -69,6 +79,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         unregisterReceiver(wifiStateReceiver);
+    }
+
+    public String getSavedNetwork(){
+        String result = sharedPreferences.getString(getString(R.string.saved_network), null);
+        return result;
+    }
+
+    public void saveNetwork(String networkName){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(getString(R.string.saved_network), networkName);
+        editor.commit();
     }
 
     public String getActualNetworkName(){
