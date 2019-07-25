@@ -22,37 +22,6 @@ import java.util.List;
 
 public class Util {
 
-    public static List<WiFi> verifyConection(Context context) {
-
-        Log.d("REDES", "verifyConection");
-
-        List<WiFi> wifiList = new ArrayList<>();
-
-        ConnectivityManager conectivtyManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (conectivtyManager.getActiveNetworkInfo() != null
-                && conectivtyManager.getActiveNetworkInfo().isAvailable()
-                && conectivtyManager.getActiveNetworkInfo().isConnected()) {
-
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            List<ScanResult> scanResults = wifiManager.getScanResults();
-
-            if (scanResults != null){
-
-                for (ScanResult sr : scanResults) {
-                    WiFi wiFi = new WiFi();
-                    wiFi.setName(sr.SSID);
-                    wiFi.setFrequency(String.valueOf(sr.frequency));
-                    wiFi.setStrength(String.valueOf(sr.level));
-                    wifiList.add(wiFi);
-                }
-            }
-        }
-
-
-
-        return wifiList;
-    }
-
     public static String getLocation(Activity activity) {
 
         ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);

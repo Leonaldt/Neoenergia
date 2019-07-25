@@ -7,11 +7,20 @@ import java.util.List;
 
 public class Device implements Serializable {
 
+    private String SSID;
     private String token;
     private String location;
     private String timestamp;
 
     public Device() {
+    }
+
+    public String getSSID() {
+        return SSID;
+    }
+
+    public void setSSID(String SSID) {
+        this.SSID = SSID;
     }
 
     public String getToken() {
